@@ -1,78 +1,105 @@
 package tn.esprit.gestionzoo.entities;
-import tn.esprit.gestionzoo.entities.Animal;
 public class Zoo {
+    private Animal[] animals;
+    private String name;
+    private String city;
+    //Instruction 14 :
 
-    Animal[] animals;
-    String name, city;
-    final int nbrCages =25;
+    final int nbrCages = 25;
+    private int nbrAnimal = 0;
 
-    int nbrAnimals;
-
-    public Zoo() {
-    }
-
-    public Zoo(String name, String city) {
+    public Zoo(String name ,String city,int nbrCages){
         animals = new Animal[nbrCages];
         this.name = name;
         this.city = city;
-
+        setName(name);
     }
 
     public void displayZoo() {
-        System.out.println("Name: " + name + ", City: " + city + ", N° Cages/Animals: " + nbrCages);
+        System.out.println("tn.esprit.gestionzoo.entities.Zoo Name: " + name);
+        System.out.println("City: " + city);
+        System.out.println("Number of Cages: " + nbrCages);
     }
 
-    public boolean addAnimal(Animal animal) {
-        if (searchAnimal(animal) != -1)
-            return false;
-        if (isZooFull()) {
-            return false;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        if (!name.isEmpty())
+            this.name = name;
+        else System.out.println("Le nom de zoo ne peut pas etre vide");
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public int getNbrCages() {
+        return nbrCages;
+    }
+
+    public int getNbrAnimal() {
+        return nbrAnimal;
+    }
+
+    public void setNbrAnimal(int nbrAnimal) {
+        this.nbrAnimal = nbrAnimal;
+    }
+
+    //Instruction 9 :
+    @Override
+    public String toString() {
+        return " Name: " + name + "\nCity: " + city + "\nNumber of Cages: " + nbrCages;
+    }
+    //Instruction 10 :
+    public boolean addAnimal(Animal animal){
+
+        if (!isZooFull() && searchAnimal(animal) == -1 ){
+            animals[nbrAnimal]= animal;
+            nbrAnimal++;
+            return true;
         }
-        animals[nbrAnimals] = animal;
-        nbrAnimals++;
-        return true;
+        return false;
     }
-
-    public boolean removeAnimal(Animal animal) {
-        int indexAnimal = searchAnimal(animal);
-        if (indexAnimal == -1)
-            return false;
-        for (int i = indexAnimal; i < nbrAnimals; i++) {
-            animals[i] = animals[i + 1];
-            animals[nbrAnimals] = null;
-            this.nbrAnimals--;
-        }
-        return true;
-    }
-
     public void displayAnimals() {
-        System.out.println("Liste des animaux de " + name + ":");
-        for (int i = 0; i < nbrAnimals; i++) {
-            System.out.println(animals[i]);
+        System.out.println("Animaux dans le zoo :");
+        for (int i = 0; i < nbrAnimal; i++) {
+            System.out.println(i + "-> " + animals[i].getName());
         }
     }
 
     public int searchAnimal(Animal animal) {
-        int index = -1;
-        for (int i = 0; i < nbrAnimals; i++) {
-            if (animal.name == animals[i].name)
+        for (int i = 0; i < nbrAnimal; i++) {
+            if ( animals[i].getName().equals(animal.getName())) {
                 return i;
+            }
         }
-        return index;
+        return -1;
     }
+    public boolean removeAnimal(Animal animal) {
+        int index = searchAnimal(animal);
+        if (index != -1) {
+            for (int i = index; i < nbrAnimal - 1; i++) {
+                animals[i] = animals[i + 1];
+            }
+            animals[nbrAnimal - 1] = null;
+            nbrAnimal--;
+            return true;
+        }
+        return false;
+    }
+    //Instruction 15 :
     public boolean isZooFull() {
-        return nbrAnimals == nbrCages;
+        return nbrCages >= nbrAnimal;
     }
-    public static Zoo comparerZoo(Zoo z1, Zoo z2) {
-        if (z1.nbrAnimals > z2.nbrAnimals) {
-            return z1;
-        } else {
+    public static Zoo comparerZoo(Zoo z1, Zoo z2){
+        if (z1.nbrAnimal < z2.nbrAnimal)
             return z2;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Name: " + name + ", City: " + city + ", N° Cages/Animals: " + nbrCages;
+        else return z1;
     }
 }
